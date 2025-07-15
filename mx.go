@@ -15,8 +15,26 @@ func (v *Verifier) CheckMX(domain string) (*Mx, error) {
 	if err != nil && len(mx) == 0 {
 		return nil, err
 	}
+
+	var valids []*net.MX
+	for i := range mx {
+		// make sure the MX is a valid domain name or IP address
+		ip := net.ParseIP(mx[i].Host)
+		if ip != nil {
+			// if it's a valid IP address, we can consider it valid
+			valids = append(valids, mx[i])
+			continue
+		}
+
+		if mx[i].Host != "" {
+			if _, err := net.LookupHost(mx[i].Host); err == nil {
+				valids = append(valids, mx[i])
+			}
+		}
+	}
+
 	return &Mx{
-		HasMXRecord: len(mx) > 0,
+		HasMXRecord: len(valids) > 0,
 		Records:     mx,
 	}, nil
 }
