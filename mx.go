@@ -1,6 +1,8 @@
 package emailverifier
 
-import "net"
+import (
+	"net"
+)
 
 // Mx is detail about the Mx host
 type Mx struct {

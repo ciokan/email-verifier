@@ -143,10 +143,10 @@ func (v *Verifier) EnableSMTPCheck() *Verifier {
 // EnableAPIVerifier API verifier is activated when EnableAPIVerifier for the target vendor.
 // ** Please know ** that this is a tricky way (but relatively stable) to check if target vendor's email exists.
 // If you use this feature in a production environment, please ensure that you have sufficient backup measures in place, as this may encounter rate limiting or other API issues.
-func (v *Verifier) EnableAPIVerifier(name string) error {
+func (v *Verifier) EnableAPIVerifier(name string, client *http.Client) error {
 	switch name {
 	case YAHOO:
-		v.apiVerifiers[YAHOO] = newYahooAPIVerifier(http.DefaultClient)
+		v.apiVerifiers[YAHOO] = newYahooAPIVerifier(client)
 	default:
 		return fmt.Errorf("unsupported to enable the API verifier for vendor: %s", name)
 	}
